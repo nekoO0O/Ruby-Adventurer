@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,18 +12,16 @@ public class NPCDialog : MonoBehaviour
     public AudioClip completeTaskclip;
     private bool hasPlayed;
 
-    // Start is called before the first frame update
     void Start()
     {
-        //Òþ²Ø¶Ô»°¿ò
+        // éšè—å¯¹è¯æ¡†
         dialogBox.SetActive(false);
         timerDisplay = -1;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (timerDisplay >= 0) 
+        if (timerDisplay >= 0)
         {
             timerDisplay -= Time.deltaTime;
             if (timerDisplay < 0)
@@ -35,15 +31,15 @@ public class NPCDialog : MonoBehaviour
         }
     }
 
-    //ÏÔÊ¾¶Ô»°¿ò
+    // æ˜¾ç¤ºå¯¹è¯æ¡†
     public void DisPlayDialog()
     {
         dialogBox.SetActive(true);
         timerDisplay = displayTime;
-        UIHealthBar.instance.hasTask = true;
-        if (UIHealthBar.instance.fixedNum >= 5)
+        UIHealthBar.Instance.hasTask = true;
+        if (UIHealthBar.Instance.fixedNum >= 5)
         {
-            dialogText.text = "Ð»Ð»ÄãRuby\n`(~)_(~)";
+            dialogText.text = "è°¢è°¢ä½ Ruby\n`(~)_(~)";
             if (!hasPlayed)
             {
                 audioSource.PlayOneShot(completeTaskclip);

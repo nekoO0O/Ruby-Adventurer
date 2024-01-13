@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DamageZone : MonoBehaviour
@@ -7,10 +5,10 @@ public class DamageZone : MonoBehaviour
     private void OnTriggerStay2D(Collider2D collision)
     {
         RubyController rubyController = collision.GetComponent<RubyController>();
-        if (rubyController != null)//±ÜÃâµĞÈËÓëÆä½»»¥£¬µ¼ÖÂ±¨´í
+        if (rubyController != null) // é¿å…æ•Œäººä¸å…¶äº¤äº’ï¼Œå¯¼è‡´æŠ¥é”™
         {
             rubyController.ChangeHealthy(-1);
-            //Debug.Log("Rubyµ±Ç°µÄÉúÃüÖµÊÇ£º" + rubyController.CurrentHealthy);
+            // Debug.Log("Rubyå½“å‰çš„ç”Ÿå‘½å€¼æ˜¯ï¼š" + rubyController.CurrentHealthy);
         }
     }
 }

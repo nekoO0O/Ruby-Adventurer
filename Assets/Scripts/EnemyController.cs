@@ -1,21 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
     private Rigidbody2D rigidbody2d;
-    public float speed = 3.0f;//µĞÈËÔË¶¯ËÙ¶È
+    public float speed = 3.0f; // æ•Œäººè¿åŠ¨é€Ÿåº¦
 
-    public bool vertical;//µĞÈËÔË¶¯ÖáÏò£¬trueÎª´¹Ö±ÖáÏò£¬falseÎªË®Æ½ÖáÏò
+    public bool vertical; // æ•Œäººè¿åŠ¨è½´å‘ï¼Œtrueä¸ºå‚ç›´è½´å‘ï¼Œfalseä¸ºæ°´å¹³è½´å‘
 
-    private int direction = 1;//µĞÈËÔË¶¯·½Ïò
-    public float changeTime = 3.0f;//·½Ïò¸Ä±äÊ±¼ä¼ä¸ô
-    private float timer;//¼ÆÊ±Æ÷
+    private int direction = 1; // æ•Œäººè¿åŠ¨æ–¹å‘
+    public float changeTime = 3.0f; // æ–¹å‘æ”¹å˜æ—¶é—´é—´éš”
+    private float timer; // è®¡æ—¶å™¨
 
-    private Animator animator;//¶¯»­×é¼ş
+    private Animator animator; // åŠ¨ç”»ç»„ä»¶
 
-    private bool broken;//µ±Ç°»úÆ÷ÈËÊÇ·ñ¹ÊÕÏ£¬trueÎªËğ»µ×´Ì¬£¨»áÒÆ¶¯£©£¬falseÎªĞŞºÃ×´Ì¬£¨²»»áÒÆ¶¯£©
+    private bool broken; // å½“å‰æœºå™¨äººæ˜¯å¦æ•…éšœï¼Œtrueä¸ºæŸåçŠ¶æ€ï¼ˆä¼šç§»åŠ¨ï¼‰ï¼Œfalseä¸ºä¿®å¥½çŠ¶æ€ï¼ˆä¸ä¼šç§»åŠ¨ï¼‰
 
     public ParticleSystem smokeEffect;
 
@@ -26,7 +24,6 @@ public class EnemyController : MonoBehaviour
 
     public GameObject hitEffectParticle;
 
-    // Start is called before the first frame update
     void Start()
     {
         rigidbody2d = GetComponent<Rigidbody2D>();
@@ -34,8 +31,8 @@ public class EnemyController : MonoBehaviour
 
         animator = GetComponent<Animator>();
 
-        //animator.SetFloat("MoveX", direction);
-        //animator.SetBool("Vertical", vertical);
+        // animator.SetFloat("MoveX", direction);
+        // animator.SetBool("Vertical", vertical);
 
         PlayMoveAnimation();
 
@@ -46,60 +43,61 @@ public class EnemyController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!broken) 
+        if (!broken)
         {
             return;
         }
 
-        //Ã¿¹ıÒ»¶ÎÊ±¼äÊ¹µĞÈË¸ü»»·½Ïò
+        //æ¯è¿‡ä¸€æ®µæ—¶é—´ä½¿æ•Œäººæ›´æ¢æ–¹å‘
         timer -= Time.deltaTime;
-        if (timer < 0) 
+        if (timer < 0)
         {
             direction = -direction;
-            //animator.SetFloat("MoveX", direction);
+            // animator.SetFloat("MoveX", direction);
             PlayMoveAnimation();
             timer = changeTime;
         }
 
         Vector2 position = GetComponent<Rigidbody2D>().position;
-        if (vertical)//´¹Ö±ÖáÏò
+        if (vertical) // å‚ç›´è½´å‘
         {
             position.y += speed * Time.deltaTime * direction;
         }
-        else//Ë®Æ½ÖáÏò
+        else // æ°´å¹³è½´å‘
         {
             position.x += speed * Time.deltaTime * direction;
         }
+
         rigidbody2d.MovePosition(position);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        //Íæ¼Ò´¥ÅöÊ¹ÆäµôÑª
+        // ç©å®¶è§¦ç¢°ä½¿å…¶æ‰è¡€
         RubyController rubyController = collision.gameObject.GetComponent<RubyController>();
-        if (rubyController != null) 
+        if (rubyController != null)
         {
             rubyController.ChangeHealthy(-1);
         }
     }
 
-    //¿ØÖÆÒÆ¶¯¶¯»­
+    // æ§åˆ¶ç§»åŠ¨åŠ¨ç”»
     private void PlayMoveAnimation()
     {
-        //Ê¹ÓÃ»ìºÏÊ÷
-        if (vertical)//´¹Ö±ÖáÏò
+        // ä½¿ç”¨æ··åˆæ ‘
+        if (vertical) // å‚ç›´è½´å‘
         {
             animator.SetFloat("MoveX", 0);
             animator.SetFloat("MoveY", direction);
         }
-        else//Ë®Æ½ÖáÏò
+        else //æ°´å¹³è½´å‘
         {
             animator.SetFloat("MoveX", direction);
             animator.SetFloat("MoveY", 0);
         }
     }
 
-    //ĞŞºÃ»úÆ÷ÈË·½·¨
+    // ä¿®å¥½æœºå™¨äººæ–¹æ³•
     public void Fix()
     {
         Instantiate(hitEffectParticle, transform.position, Quaternion.identity);
@@ -112,7 +110,7 @@ public class EnemyController : MonoBehaviour
         audioSource.volume = 0.5f;
         audioSource.PlayOneShot(hitSounds[randomNum]);
         Invoke("PlayFixedSound", 1f);
-        UIHealthBar.instance.fixedNum++;
+        UIHealthBar.Instance.fixedNum++;
         smokeEffect.Stop();
     }
 

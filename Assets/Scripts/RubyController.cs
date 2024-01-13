@@ -1,24 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class RubyController : MonoBehaviour
 {
-    private Rigidbody2D rigidbody2d;//RubyµÄ¸ÕÌå×é¼ş
-    public float speed = 4;//RubyµÄËÙ¶È
+    private Rigidbody2D rigidbody2d; // Rubyçš„åˆšä½“ç»„ä»¶
+    public float speed = 4; // Rubyçš„é€Ÿåº¦
 
-    //RubyµÄÉúÃüÖµ
-    public int maxHealthy = 5;//RubyµÄ×î´óÉúÃüÖµ
-    private int currentHealthy;//Rubyµ±Ç°ÉúÃüÖµ
-    public int CurrentHealthy { get { return currentHealthy; } }
-    
-    //RubyµÄÎŞµĞÊ±¼ä
-    private float timeInvincible = 2.0f;//ÎŞµĞÊ±¼ä³£Á¿
+    // Rubyçš„ç”Ÿå‘½å€¼
+    public int maxHealthy = 5; // Rubyçš„æœ€å¤§ç”Ÿå‘½å€¼
+    private int currentHealthy; // Rubyå½“å‰ç”Ÿå‘½å€¼
+
+    public int CurrentHealthy
+    {
+        get { return currentHealthy; }
+    }
+
+    // Rubyçš„æ— æ•Œæ—¶é—´
+    private float timeInvincible = 2.0f; // æ— æ•Œæ—¶é—´å¸¸é‡
     private bool isInvincible;
-    private float invincibleTimer;//¼ÆÊ±Æ÷
+    private float invincibleTimer; // è®¡æ—¶å™¨
 
-    private Vector2 lookDirection = new Vector2(1,0);
+    private Vector2 lookDirection = new Vector2(1, 0);
     private Animator animator;
 
     public GameObject projectilePrefab;
@@ -32,46 +33,44 @@ public class RubyController : MonoBehaviour
 
     private Vector3 respawnPosition;
 
-    // Start is called before the first frame update
     void Start()
     {
-        rigidbody2d= GetComponent<Rigidbody2D>();
-        
-        //ÉèÖÃÉúÃüÖµ
+        rigidbody2d = GetComponent<Rigidbody2D>();
+
+        // è®¾ç½®ç”Ÿå‘½å€¼
         currentHealthy = maxHealthy;
 
         animator = GetComponent<Animator>();
 
-        //audioSource = GetComponent<AudioSource>();
+        // audioSource = GetComponent<AudioSource>();
 
         respawnPosition = transform.position;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        //ÎŞµĞÊ±¼ä
+        // æ— æ•Œæ—¶é—´
         if (isInvincible)
         {
             invincibleTimer -= Time.deltaTime;
-            if (invincibleTimer <= 0) 
+            if (invincibleTimer <= 0)
             {
                 isInvincible = false;
             }
         }
 
-        //¹¥»÷
-        if(Input.GetKeyDown(KeyCode.H))
+        // æ”»å‡»
+        if (Input.GetKeyDown(KeyCode.H))
         {
             Launch();
         }
 
-        //¼ì²âÊÇ·ñÓëNPC¶Ô»°
+        // æ£€æµ‹æ˜¯å¦ä¸NPCå¯¹è¯
         if (Input.GetKeyDown(KeyCode.T))
         {
             RaycastHit2D hit = Physics2D.Raycast(rigidbody2d.position + Vector2.up * 0.2f,
                 lookDirection, 1.5f, LayerMask.GetMask("NPC"));
-            if (hit.collider != null) 
+            if (hit.collider != null)
             {
                 NPCDialog npcDialog = hit.collider.GetComponent<NPCDialog>();
                 if (npcDialog != null)
@@ -82,16 +81,16 @@ public class RubyController : MonoBehaviour
         }
     }
 
-    //¹Ì¶¨¸üĞÂ£¬Ã¿Ãë50´Î
+    // å›ºå®šæ›´æ–°ï¼Œæ¯ç§’50æ¬¡
     void FixedUpdate()
     {
-        //Ê¹ÓÃ¸ÕÌåÒÆ¶¯
+        // ä½¿ç”¨åˆšä½“ç§»åŠ¨
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
         Vector2 move = new Vector2(horizontal, vertical);
 
-        //µ±Íæ¼ÒÊäÈëµÄÄ³Ò»¸öÖáÏò²»Îª0
+        // å½“ç©å®¶è¾“å…¥çš„æŸä¸€ä¸ªè½´å‘ä¸ä¸º0
         if (!Mathf.Approximately(move.x, 0) || !Mathf.Approximately(move.y, 0))
         {
             lookDirection.Set(move.x, move.y);
@@ -114,17 +113,17 @@ public class RubyController : MonoBehaviour
         rigidbody2d.MovePosition(rigidbody2d.position + move * speed * Time.deltaTime);
     }
 
-    //¸Ä±äÉúÃüÖµµ÷ÓÃ·½·¨
+    // æ”¹å˜ç”Ÿå‘½å€¼è°ƒç”¨æ–¹æ³•
     public void ChangeHealthy(int amount)
     {
-        if (amount < 0) 
+        if (amount < 0)
         {
-            if (isInvincible) 
+            if (isInvincible)
             {
                 return;
             }
 
-            //ÊÜµ½ÉËº¦
+            // å—åˆ°ä¼¤å®³
             isInvincible = true;
             invincibleTimer = timeInvincible;
             animator.SetTrigger("Hit");
@@ -133,20 +132,20 @@ public class RubyController : MonoBehaviour
 
         currentHealthy = Mathf.Clamp(currentHealthy + amount, 0, maxHealthy);
 
-        //½«µ±Ç°ÑªÁ¿ºÍ×î´óÑªÁ¿Êä³öµ½¿ØÖÆÌ¨
-        //Debug.Log(currentHealthy + "/" + maxHealthy);
-        UIHealthBar.instance.SetValue(currentHealthy / (float)maxHealthy);
+        // å°†å½“å‰è¡€é‡å’Œæœ€å¤§è¡€é‡è¾“å‡ºåˆ°æ§åˆ¶å°
+        // Debug.Log(currentHealthy + "/" + maxHealthy);
+        UIHealthBar.Instance.SetValue(currentHealthy / (float)maxHealthy);
 
-        if (currentHealthy<=0)
+        if (currentHealthy <= 0)
         {
             Respawan();
         }
     }
 
-    //¹¥»÷·½·¨
+    // æ”»å‡»æ–¹æ³•
     private void Launch()
     {
-        if (!UIHealthBar.instance.hasTask)
+        if (!UIHealthBar.Instance.hasTask)
         {
             return;
         }
@@ -160,7 +159,7 @@ public class RubyController : MonoBehaviour
         playSound(attackSoundClip);
     }
 
-    //²¥·ÅÒôĞ§·½·¨
+    // æ’­æ”¾éŸ³æ•ˆæ–¹æ³•
     public void playSound(AudioClip audioClip)
     {
         audioSource.PlayOneShot(audioClip);

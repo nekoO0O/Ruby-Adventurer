@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
     private Rigidbody2D rigidbody2d;
 
-    // Start is called before the first frame update
     void Awake()
     {
         rigidbody2d = GetComponent<Rigidbody2D>();
@@ -14,7 +11,7 @@ public class Projectile : MonoBehaviour
 
     private void Update()
     {
-        if (transform.position.magnitude > 100)  
+        if (transform.position.magnitude > 100)
         {
             Destroy(gameObject);
         }
@@ -28,7 +25,7 @@ public class Projectile : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         EnemyController enemyController = collision.gameObject.GetComponent<EnemyController>();
-        if (enemyController != null ) 
+        if (enemyController != null)
         {
             enemyController.Fix();
         }

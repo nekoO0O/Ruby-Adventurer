@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class HealthyCollectible : MonoBehaviour
@@ -11,9 +9,9 @@ public class HealthyCollectible : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         RubyController rubyController = collision.GetComponent<RubyController>();
-        if (rubyController != null)//±ÜÃâµĞÈËÓëÆä½»»¥£¬µ¼ÖÂ±¨´í
+        if (rubyController != null) // é¿å…æ•Œäººä¸å…¶äº¤äº’ï¼Œå¯¼è‡´æŠ¥é”™
         {
-            //RubyÊÇ·ñÂúÑª
+            // Rubyæ˜¯å¦æ»¡è¡€
             if (rubyController.CurrentHealthy < rubyController.maxHealthy)
             {
                 rubyController.ChangeHealthy(1);
